@@ -7,13 +7,15 @@ describe Gitaculous::Repo do
     @base_url = "https://github.com/user/repo"
   end
 
-  it "should assign the right values to instance variables" do
-    @repo.user.should == "user"
-    @repo.repo.should == "repo"
-  end
+  describe "#initialize" do
+    it "should assign the right values to instance variables" do
+      @repo.user.should == "user"
+      @repo.repo.should == "repo"
+    end
 
-  it "should have a base URL" do
-    @repo.base_url.should == @base_url
+    it "should have a base URL" do
+      @repo.base_url.should == @base_url
+    end
   end
 
   describe "#profile_for" do
@@ -67,7 +69,6 @@ describe Gitaculous::Repo do
   end
   
   describe "#graphs" do
-    
     it "should return the URL" do
       @repo.graphs.should == "#{@base_url}/graphs/languages"
     end
@@ -84,6 +85,32 @@ describe Gitaculous::Repo do
       @repo.graphs(:traffic).should == "#{@base_url}/graphs/traffic"
     end
   end
-
-
+  
+  describe "#compare view" do
+    it "should return the URL (default comparison base is master)" do
+      @repo.compare("foo").should == "#{@base_url}/compare/master...foo"
+    end
+    
+    it "should return the URL for comparing two arbitrary branches" do
+      @repo.compare("foo", "bar").should == "#{@base_url}/compare/foo...bar"
+    end
+  end
+  
+  describe "#branches" do
+    it "should return the URL" do
+      @repo.branches.should == "#{@base_url}/branches"
+    end
+  end
+  
+  describe "#branch" do
+    it "should return the URL" do
+      @repo.branch("foo").should == "#{@repo.branches}/foo"
+    end
+  end
+  
+  describe "#blame" do
+  end
+  
+  describe "#history" do
+  end
 end

@@ -46,6 +46,18 @@ module Gitaculous
    def graphs(type = "languages")
      "#{base_url}/graphs/#{type}"
    end
+
+   def branch(branch_name)
+     "#{branches}/#{branch_name}"
+   end
+
+   def branches
+    "#{base_url}/branches"
+   end
         
+    def compare(*args)      
+      b1, b2 = (args.length > 1) ? args : args.unshift("master")
+      "#{base_url}/compare/#{b1}...#{b2}"
+    end
   end
 end
