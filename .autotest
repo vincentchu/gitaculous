@@ -1,0 +1,8 @@
+require 'autotest/growl'
+
+Autotest.add_hook(:initialize) {|at|
+  at.add_exception %r{^\.git}  # ignore Version Control System
+  at.add_mapping(%r%^lib/gitaculous/.*rb$%, true) {
+    at.files_matching %r%^spec/lib/.*_spec.rb$%
+  }
+}
