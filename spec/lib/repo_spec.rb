@@ -108,7 +108,16 @@ describe Gitaculous::Repo do
     end
   end
   
+  describe "#tree" do
+    it "should return the URL (default of master)" do
+      @repo.tree("foo").should == "#{@base_url}/tree/foo"
+    end
+  end
+  
   describe "#blame" do
+    it "should return the URL" do
+      
+    end
   end
   
   describe "#history" do
