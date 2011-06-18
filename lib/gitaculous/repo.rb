@@ -76,6 +76,10 @@ module Gitaculous
       File.join(base_url, file_path_for("commits", branch_name, file))
     end  
 
+    def file_list(branch_name = 'master')
+      "#{base_url}/tree-list/#{branch_name}"
+    end
+    
     private
     
     def file_path_for(type, branch_name, file)

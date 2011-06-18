@@ -138,5 +138,11 @@ describe Gitaculous::Repo do
     it "should allow you to specify the branch" do
       @repo.blob("path/to/some/file.foo", "other_branch").should == "#{@base_url}/blob/other_branch/path/to/some/file.foo"
     end    
+  end
+  
+  describe "#file_list" do
+    it "should return the URL" do
+      @repo.file_list("some_branch").should == "#{@base_url}/tree-list/some_branch"
+    end
   end  
 end
