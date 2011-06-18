@@ -35,7 +35,6 @@ module Gitaculous
       "#{base_url}/issues"
     end
    
-   
     def milestones
       "#{issues}/milestones"
     end
@@ -64,7 +63,23 @@ module Gitaculous
     def tree(branch_name = 'master')
       "#{base_url}/tree/#{branch_name}"      
     end
-   
-   
+    
+    def blob(file, branch_name = 'master')
+      File.join(base_url, file_path_for("blob", branch_name, file))
+    end
+    
+    def blame(file, branch_name = 'master')
+      File.join(base_url, file_path_for("blame", branch_name, file))
+    end
+    
+    def history(file, branch_name = 'master')
+      File.join(base_url, file_path_for("commits", branch_name, file))
+    end  
+
+    private
+    
+    def file_path_for(type, branch_name, file)
+      File.join("/", type, branch_name, file)
+    end
   end
 end

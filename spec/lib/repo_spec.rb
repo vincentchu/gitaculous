@@ -116,10 +116,27 @@ describe Gitaculous::Repo do
   
   describe "#blame" do
     it "should return the URL" do
-      
+      @repo.blame("path/to/some/file.foo").should == "#{@base_url}/blame/master/path/to/some/file.foo"
     end
   end
   
   describe "#history" do
+    it "should return the URL" do
+      @repo.history("path/to/some/file.foo").should == "#{@base_url}/commits/master/path/to/some/file.foo"
+    end
   end
+  
+  describe "#blob" do
+    it "should return the URL" do
+      @repo.blob("path/to/some/file.foo").should == "#{@base_url}/blob/master/path/to/some/file.foo"
+    end
+    
+    it "should return the URL without caring about an opening slash" do
+      @repo.blob("/path/to/some/file.foo").should == "#{@base_url}/blob/master/path/to/some/file.foo"
+    end
+    
+    it "should allow you to specify the branch" do
+      @repo.blob("path/to/some/file.foo", "other_branch").should == "#{@base_url}/blob/other_branch/path/to/some/file.foo"
+    end    
+  end  
 end
