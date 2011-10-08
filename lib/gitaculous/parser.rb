@@ -19,6 +19,37 @@ module Gitaculous
       @file_list
     end
 
+    def parse( str )
+      args = str.split(/\s+/)
+      cmd  = args.shift.downcase.to_sym
+
+      puts "cmd = #{cmd.inspect}, args = #{args.inspect}"
+
+
+      url = case cmd
+        when :langs
+          repo.graphs(:languages)
+
+        when :impact
+          repo.graphs(:impact)
+
+        when :punch
+          repo.graphs(:punchcard)
+
+        when :traffic
+          repo.graphs(:traffic)
+
+        when :compare
+          args = args.first(2)
+          repo.compare(*args)
+
+        else
+          repo.send(cmd, args.first)
+      end
+
+      url
+    end
+
     private
 
     def fetch_file_list_from_redis!

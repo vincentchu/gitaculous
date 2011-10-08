@@ -22,127 +22,135 @@ describe Gitaculous::Repo do
     it "should return the URL of a user" do
       @repo.profile_for("matz").should == "https://github.com/matz"
     end
+
+    it "should alias #profile to the same command" do
+      @repo.profile("matz").should == "https://github.com/matz"
+    end
   end
 
   describe "#commits" do
     it "should return the URL for master" do
       @repo.commits.should == "#{@base_url}/commits/master"
     end
-    
+
+    it "should return the URL for master if input string is blank" do
+      @repo.commits("").should == "#{@base_url}/commits/master"
+    end
+
     it "should return the URL for any branch" do
       @repo.commits("foo").should == "#{@base_url}/commits/foo"
     end
   end
-  
+
   describe "#network" do
     it "should return the URL for the network" do
       @repo.network.should == "#{@base_url}/network/"
     end
   end
-  
+
   describe "#pulls" do
     it "should return the URL for pull requests" do
       @repo.pulls.should == "#{@base_url}/pulls"
     end
   end
-  
+
   describe "#forkqueue" do
     it "should return the URL" do
       @repo.forkqueue.should == "#{@base_url}/forkqueue"
     end
   end
-  
+
   describe "#issues" do
     it "should return the URL" do
       @repo.issues.should == "#{@base_url}/issues"
     end
-    
+
     it "should return the URL for milestones" do
       @repo.milestones.should == "#{@base_url}/issues/milestones"
     end
   end
-  
+
   describe "#wiki" do
     it "should return the URL" do
       @repo.wiki.should == "#{@base_url}/wiki"
     end
   end
-  
+
   describe "#graphs" do
     it "should return the URL" do
       @repo.graphs.should == "#{@base_url}/graphs/languages"
     end
-    
+
     it "should return URL for impact" do
       @repo.graphs(:impact).should == "#{@base_url}/graphs/impact"
     end
-    
+
     it "should return URL for punchcard" do
       @repo.graphs(:punchcard).should == "#{@base_url}/graphs/punchcard"
     end
-    
+
     it "should return URL for traffic" do
       @repo.graphs(:traffic).should == "#{@base_url}/graphs/traffic"
     end
   end
-  
+
   describe "#compare view" do
     it "should return the URL (default comparison base is master)" do
       @repo.compare("foo").should == "#{@base_url}/compare/master...foo"
     end
-    
+
     it "should return the URL for comparing two arbitrary branches" do
       @repo.compare("foo", "bar").should == "#{@base_url}/compare/foo...bar"
     end
   end
-  
+
   describe "#branches" do
     it "should return the URL" do
       @repo.branches.should == "#{@base_url}/branches"
     end
   end
-  
+
   describe "#branch" do
     it "should return the URL" do
       @repo.branch("foo").should == "#{@repo.branches}/foo"
     end
   end
-  
+
   describe "#tree" do
     it "should return the URL (default of master)" do
       @repo.tree("foo").should == "#{@base_url}/tree/foo"
     end
   end
-  
+
   describe "#blame" do
     it "should return the URL" do
       @repo.blame("path/to/some/file.foo").should == "#{@base_url}/blame/master/path/to/some/file.foo"
     end
   end
-  
+
   describe "#history" do
     it "should return the URL" do
       @repo.history("path/to/some/file.foo").should == "#{@base_url}/commits/master/path/to/some/file.foo"
     end
   end
-  
+
   describe "#blob" do
     it "should return the URL" do
       @repo.blob("path/to/some/file.foo").should == "#{@base_url}/blob/master/path/to/some/file.foo"
     end
-    
+
     it "should return the URL without caring about an opening slash" do
       @repo.blob("/path/to/some/file.foo").should == "#{@base_url}/blob/master/path/to/some/file.foo"
     end
-    
+
     it "should allow you to specify the branch" do
       @repo.blob("path/to/some/file.foo", "other_branch").should == "#{@base_url}/blob/other_branch/path/to/some/file.foo"
-    end    
+    end
   end
-  
+
   describe "#file_list" do
     it "should return the URL" do
       @repo.file_list("some_branch").should == "#{@base_url}/tree-list/some_branch"
     end
-  end  
+  end
 end
