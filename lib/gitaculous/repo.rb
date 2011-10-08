@@ -54,7 +54,7 @@ module Gitaculous
       "#{branches}/#{branch_name}"
     end
 
-    def branches
+    def branches(type = nil)
      "#{base_url}/branches"
     end
 

@@ -3,12 +3,16 @@ module Gitaculous
 
     SEC_PER_MIN = 60
 
-    attr_reader :config, :repo, :redis
+    attr_reader :config, :repo, :redis, :file_matcher
 
     def initialize(opts = {})
       @config = opts
       @repo   = Repo.new(:user => config[:user], :repo => config[:repo])
       @redis  = Redis.new (config[:redis] || {})
+    end
+
+    def file_matcher
+      @file_matcher ||= FuzzBall::Searcher.new( file_list )
     end
 
     def file_list
@@ -22,9 +26,6 @@ module Gitaculous
     def parse( str )
       args = str.split(/\s+/)
       cmd  = args.shift.downcase.to_sym
-
-      puts "cmd = #{cmd.inspect}, args = #{args.inspect}"
-
 
       url = case cmd
         when :langs
@@ -43,6 +44,9 @@ module Gitaculous
           args = args.first(2)
           repo.compare(*args)
 
+        when :src, :hist, :blame
+          handle_file_match(cmd, args.first)
+
         else
           repo.send(cmd, args.first)
       end
@@ -52,13 +56,28 @@ module Gitaculous
 
     private
 
+    def handle_file_match(cmd, search_term)
+      matches = file_matcher.search(search_term)
+
+      best_match = matches.first[:string]
+      case cmd
+        when :src
+          repo.blob(best_match)
+
+        when :hist
+          repo.history(best_match)
+
+        when :blame
+          repo.blame(best_match)
+
+      end
+    end
+
     def fetch_file_list_from_redis!
-      puts "Getting file list from redis ... "
       @file_list = redis.smembers(redis_file_list_key)
     end
 
     def fetch_file_list_from_remote!
-      puts "Making request ... "
       response = Typhoeus::Request.get(repo.file_list, :user_agent => "Gitaculous - http://github.com/vincentchu/gitaculous")
       @file_list = response.body.split("\n")
 

@@ -93,6 +93,41 @@ describe Gitaculous::Parser do
       @parser.parse("wiki").should == "#{@base_url}/wiki"
     end
 
+    it "should handle branches" do
+      @parser.parse("branches").should == "#{@base_url}/branches"
+    end
+
+    it "should handle branch" do
+      @parser.parse("branch foo").should == "#{@base_url}/branches/foo"
+    end
+
+    describe "Matching files" do
+      before(:each) do
+
+        @file_fragment = "appmodusrrb"
+        @file_matches  = [
+          {:string => "/app/models/user.rb", :score => 1.0},
+          {:string => "/some/other/match.",  :score => 0.5}
+        ]
+
+        @matcher_mock = mock('matcher_mock')
+        @matcher_mock.should_receive(:search).once.with(@file_fragment).and_return(@file_matches)
+        @parser.stub!(:file_matcher).and_return(@matcher_mock)
+      end
+
+      it "should handle src" do
+        @parser.parse("src #{@file_fragment}").should == "#{@base_url}/blob/master/app/models/user.rb"
+      end
+
+      it "should handle hist" do
+        @parser.parse("hist #{@file_fragment}").should == "#{@base_url}/commits/master/app/models/user.rb"
+      end
+
+      it "should handle blame" do
+        @parser.parse("blame #{@file_fragment}").should == "#{@base_url}/blame/master/app/models/user.rb"
+      end
+    end
+
     describe "compare" do
       it "should show compare view against master" do
         @parser.parse("compare foo").should == "#{@base_url}/compare/master...foo"
