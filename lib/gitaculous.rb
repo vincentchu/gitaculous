@@ -4,8 +4,6 @@ require 'typhoeus'
 require 'redis'
 
 module Gitaculous
-  
-  autoload :Repo,   'gitaculous/repo'
-  autoload :Parser, 'gitaculous/parser'
-  
+  autoload :Repo,       'gitaculous/repo'
+  autoload :Parser,     'gitaculous/parser'
 end
