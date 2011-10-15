@@ -57,9 +57,9 @@ module Gitaculous
     private
 
     def handle_file_match(cmd, search_term)
-      matches = file_matcher.search(search_term)
-
+      matches    = file_matcher.search(search_term, :limit => 15, :order => :descending)
       best_match = matches.first[:string]
+
       case cmd
         when :src
           repo.blob(best_match)
@@ -69,7 +69,6 @@ module Gitaculous
 
         when :blame
           repo.blame(best_match)
-
       end
     end
 
