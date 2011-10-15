@@ -1,18 +1,30 @@
 require 'sinatra/base'
 require 'cgi'
+require 'haml'
+
 module Gitaculous
   class Server < Sinatra::Application
 
     configure do
       set :cache, {}
+      set :views, File.expand_path(File.join(__FILE__, "../../../views"))
     end
 
     get "/" do
-      'This is root'
+      haml :index
+    end
+
+    get "/:user/:repo" do
+      redirect handle_query!
     end
 
     get "/:user/:repo/:query" do
+      redirect handle_query!
+    end
 
+    private
+
+    def handle_query!
       init_parser!
 
       redirect_to = begin
@@ -21,10 +33,8 @@ module Gitaculous
         url_for_google_query( @query )
       end
 
-      redirect redirect_to
+      redirect_to
     end
-
-    private
 
     def init_parser!
 
